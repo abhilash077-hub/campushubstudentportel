@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-accent="violet">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CampusHub – Student Portal</title>
+<style>
+:root{--r:18px;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+[data-accent=violet]{--a:#7c3aed;--b:#ec4899}
+[data-accent=emerald]{--a:#059669;--b:#06b6d4}
+[data-accent=sunset]{--a:#f97316;--b:#e11d48}
+[data-accent=ocean]{--a:#2563eb;--b:#14b8a6}
+[data-theme=light]{--bg:#f6f4fb;--card:#fff;--tx:#1e1b2e;--mu:#6b6880;--bd:#e8e4f3;--ok:#10b981;--bad:#ef4444}
+[data-theme=dark]{--bg:#0f0d1a;--card:#1a1730;--tx:#f1eefc;--mu:#9a96b5;--bd:#2c2848;--ok:#34d399;--bad:#f87171}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f0d1a}}
+html,body{margin:0;height:100%}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx);transition:background .4s,color .4s}
+#root{min-height:100%}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;padding:12px 16px;background:linear-gradient(120deg,var(--a),var(--b));color:#fff;box-shadow:0 8px 24px -10px var(--a)}
+.logo{width:42px;height:42px;border-radius:14px;background:#fff;color:var(--a);display:grid;place-items:center;font-weight:800;font-size:20px;animation:pop .6s both}
+.top h1{margin:0;font-size:19px}.top small{opacity:.85;font-size:12px}
+.grow{flex:1}
+.ib{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.15);color:#fff;border-radius:12px;width:40px;height:40px;font-size:18px;cursor:pointer;transition:transform .2s}
+.ib:hover{transform:scale(1.1) rotate(8deg)}
+.side{overflow-y:auto;position:fixed;top:0;bottom:0;left:0;width:260px;max-width:80vw;background:var(--card);z-index:30;padding:90px 14px 14px;transform:translateX(-105%);transition:transform .35s cubic-bezier(.2,.8,.2,1);box-shadow:20px 0 50px -20px #0006}
+.side.open{transform:none}
+.scrim{position:fixed;inset:0;background:#0006;z-index:25;opacity:0;pointer-events:none;transition:opacity .3s}
+.scrim.open{opacity:1;pointer-events:auto}
+.nav{display:flex;gap:12px;align-items:center;width:100%;padding:14px;border:0;background:none;color:var(--mu);font:inherit;font-size:16px;border-radius:14px;cursor:pointer;margin-bottom:4px;transition:.25s}
+.nav:hover{background:var(--bg);transform:translateX(4px)}
+.nav.on{background:linear-gradient(120deg,var(--a),var(--b));color:#fff;font-weight:700}
+main{padding:20px 16px 80px;max-width:1000px;margin:auto}
+.view{animation:slide .45s cubic-bezier(.2,.8,.2,1) both}
+h2{font-size:28px;margin:6px 0 4px}.sub{color:var(--mu);margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:18px;margin-bottom:16px;box-shadow:0 10px 30px -22px var(--a)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.stat{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:16px;animation:slide .5s both;transition:transform .25s}
+.stat:hover{transform:translateY(-5px)}
+.stat:before{content:"";position:absolute;right:-20px;top:-20px;width:80px;height:80px;border-radius:50%;background:linear-gradient(120deg,var(--a),var(--b));opacity:.18}
+.stat span{color:var(--mu);font-size:13px;font-weight:600}.stat b{display:block;font-size:34px;margin:8px 0 2px}
+.btn{border:1px solid var(--bd);background:var(--card);color:var(--a);font:inherit;font-weight:700;padding:11px 16px;border-radius:14px;cursor:pointer;transition:.2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 18px -10px var(--a)}
+.btn.p{background:linear-gradient(120deg,var(--a),var(--b));color:#fff;border:0}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+input,select{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:11px 13px;width:100%;transition:.2s}
+input:focus,select:focus{outline:2px solid var(--a);border-color:transparent}
+.row input,.row select{flex:1;min-width:140px;width:auto}
+.tw{overflow-x:auto;border-radius:14px;border:1px solid var(--bd)}
+table{width:100%;border-collapse:collapse;min-width:520px}
+th{padding:12px;text-align:left;font-size:12px;letter-spacing:.06em;color:var(--mu);cursor:pointer;background:var(--bg);white-space:nowrap}
+td{padding:12px;border-top:1px solid var(--bd)}
+tr.r{cursor:pointer;transition:background .2s;animation:slide .4s both}
+tr.r:hover{background:var(--bg)}
+.pill{display:inline-block;padding:5px 12px;border-radius:999px;font-weight:700;font-size:13px}
+.pill.ok{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+.pill.bad{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--bad)}
+.li{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border:1px solid var(--bd);border-radius:14px;margin-bottom:8px;cursor:pointer;animation:slide .4s both;transition:.2s}
+.li:hover{transform:translateX(5px);border-color:var(--a)}
+.li small{color:var(--mu)}
+.bars{display:flex;align-items:flex-end;justify-content:space-around;height:200px;border-bottom:2px solid var(--bd);padding:0 10px}
+.bw{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;flex:1}
+.bar{width:44px;border-radius:12px 12px 0 0;background:linear-gradient(180deg,var(--b),var(--a));transition:height 1.1s cubic-bezier(.2,.8,.2,1);position:relative}
+.bar em{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-style:normal;font-weight:700;font-size:13px}
+.lab{display:flex;justify-content:space-around;color:var(--mu);font-size:13px;padding-top:6px}
+.ring{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center}
+.leg i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:8px}
+.prof{text-align:center}
+.av{width:90px;height:90px;border-radius:28px;margin:0 auto 10px;display:grid;place-items:center;font-size:40px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--a),var(--b));animation:pop .6s both}
+.sub-r{margin:14px 0;text-align:left}
+.sub-r div:first-child{display:flex;justify-content:space-between;font-weight:600;margin-bottom:6px}
+.trk{height:12px;background:var(--bg);border-radius:99px;overflow:hidden}
+.fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--a),var(--b));transition:width 1s cubic-bezier(.2,.8,.2,1)}
+label{display:block;font-weight:700;color:var(--mu);margin:14px 0 6px;font-size:14px}
+input[type=range]{padding:0;accent-color:var(--a)}
+.sw{display:flex;gap:10px;margin-top:6px}
+.sw button{width:38px;height:38px;border-radius:50%;border:3px solid transparent;cursor:pointer;transition:.25s}
+.sw button.on{border-color:var(--tx);transform:scale(1.15)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,100px);background:var(--tx);color:var(--bg);padding:12px 20px;border-radius:14px;font-weight:600;z-index:50;transition:transform .4s cubic-bezier(.2,1.2,.4,1)}
+.toast.show{transform:translate(-50%,0)}
+.chips{display:flex;gap:8px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px}
+.chip{border:1px solid var(--bd);background:var(--card);color:var(--tx);font:inherit;font-weight:700;padding:10px 16px;border-radius:99px;cursor:pointer;transition:.25s;white-space:nowrap}
+.chip.on{background:linear-gradient(120deg,var(--a),var(--b));color:#fff;border:0;transform:scale(1.06)}
+.per{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--bd);border-left:5px solid var(--a);border-radius:16px;padding:14px;margin-bottom:10px;animation:slide .45s both;transition:.2s}
+.per:hover{transform:translateX(5px)}
+.per.now{box-shadow:0 0 0 2px var(--b),0 10px 24px -12px var(--b)}
+.per .tm{min-width:62px;font-weight:800;color:var(--a)}
+.per small{color:var(--mu)}
+.brk{text-align:center;color:var(--mu);font-size:13px;margin:6px 0 10px}
+.modal{position:fixed;inset:0;background:#0007;z-index:40;display:grid;place-items:center;padding:16px;animation:fade .25s}
+.modal .card{width:100%;max-width:400px;margin:0;animation:pop .35s both}
+.mth{display:flex;gap:8px;margin:8px 0}
+.spin{display:inline-block;width:16px;height:16px;border:3px solid #fff6;border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite;vertical-align:middle}
+@keyframes rot{to{transform:rotate(360deg)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes slide{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.5) rotate(-12deg)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<script type="text/babel">
+const {useState,useEffect,useMemo,useRef}=React;
+const NAMES="Akhil,Ananya,Arjun,Bharat,Bhavya,Chandana,Charan,Deepika,Dinesh,Esha,Eshwar,Farah,Gokul,Harini,Ishaan,Jahnavi,Karthik,Lavanya,Manoj,Nisha,Omkar,Priya,Rahul,Sneha,Tarun,Uma,Varun,Wasim,Yash,Zoya".split(",");
+const ATT=[76,82,68,52,91,87,64,78,63,80,55,73,88,94,62,81,74,85,59,90,69,92,61,84,71,86,66,57,52,63];
+const rnd=(i,k)=>40+((i*37+k*53+11)%58);
+const CF=85000,EF=2500,fmt=n=>"₹"+n.toLocaleString("en-IN");
+const SEED=NAMES.map((n,i)=>({id:"A"+(101+i),name:n,dept:i%2?"AIDS":"CSE",section:i%3?"A":"B",att:ATT[i],cf:Math.round(CF*[1,.5,.75,0,1][i%5]),ef:i%3?EF:0,math:rnd(i,1),prog:rnd(i,2),dbms:rnd(i,3)}));
+const SUBJ=[["math","Math"],["prog","Programming"],["dbms","DBMS"]];
+const avgM=s=>Math.round((s.math+s.prog+s.dbms)/3);
+const mean=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):0;
+
+function useCount(t){const[v,setV]=useState(0);useEffect(()=>{let f,s=performance.now(),from=v;const step=n=>{const p=Math.min((n-s)/900,1);setV(Math.round(from+(t-from)*(1-Math.pow(1-p,3))));if(p<1)f=requestAnimationFrame(step)};f=requestAnimationFrame(step);return()=>cancelAnimationFrame(f)},[t]);return v}
+const Stat=({l,v,s,suf="",d=0,c})=>{const n=useCount(v);return <div className="stat" style={{animationDelay:d+"ms"}}><span>{l}</span><b style={{color:c}}>{n}{suf}</b><small style={{color:"var(--mu)"}}>{s}</small></div>};
+const Grow=({v})=>{const[w,setW]=useState(0);useEffect(()=>{const t=setTimeout(()=>setW(v),60);return()=>clearTimeout(t)},[v]);return <div className="trk"><div className="fill" style={{width:w+"%"}}/></div>};
+
+function Bars({data}){const[g,setG]=useState(false);useEffect(()=>{const t=setTimeout(()=>setG(true),80);return()=>clearTimeout(t)},[]);
+return <><div className="bars">{data.map(d=><div className="bw" key={d.l}><div style={{display:"flex",gap:6,alignItems:"flex-end",height:"100%"}}>{d.v.map((x,i)=><div key={i} className="bar" style={{height:g?x*1.8+"px":0,opacity:i?.55:1}}><em>{x}</em></div>)}</div></div>)}</div><div className="lab">{data.map(d=><span key={d.l}>{d.l}</span>)}</div></>}
+
+function Donut({a,b}){const[p,setP]=useState(0);useEffect(()=>{const t=setTimeout(()=>setP(1),80);return()=>clearTimeout(t)},[a,b]);
+const tot=a+b||1,C=2*Math.PI*60,okL=C*a/tot*p;
+return <div className="ring"><svg width="170" height="170" viewBox="0 0 170 170"><circle cx="85" cy="85" r="60" fill="none" stroke="var(--bad)" strokeWidth="22"/><circle cx="85" cy="85" r="60" fill="none" stroke="var(--ok)" strokeWidth="22" strokeDasharray={okL+" "+C} transform="rotate(-90 85 85)" style={{transition:"stroke-dasharray 1.2s cubic-bezier(.2,.8,.2,1)"}}/><text x="85" y="92" textAnchor="middle" fontSize="26" fontWeight="800" fill="var(--tx)">{Math.round(a/tot*100)}%</text></svg>
+<div className="leg"><p><i style={{background:"var(--ok)"}}/>75% or above · {a}</p><p><i style={{background:"var(--bad)"}}/>Below 75% · {b}</p></div></div>}
+
+function Dashboard({st,open}){
+const low=st.filter(s=>s.att<75),top=[...st].sort((a,b)=>avgM(b)-avgM(a)).slice(0,4);
+const depts=["CSE","AIDS"].map(d=>{const x=st.filter(s=>s.dept===d);return{l:d,v:[mean(x.map(s=>s.att)),mean(x.map(avgM))]}});
+return <div className="view"><h2>Dashboard</h2><p className="sub">Live attendance & results at a glance.</p>
+<div className="grid"><Stat l="Total Students" v={st.length} s="Loaded from current data"/><Stat d={80} l="Avg Attendance" v={mean(st.map(s=>s.att))} suf="%" s="Target 75%"/><Stat d={160} l="Avg Marks" v={mean(st.map(avgM))} suf="%" s="Across subjects"/><Stat d={240} l="Below 75%" v={low.length} c="var(--bad)" s="Needs attention"/><Stat d={320} l="Fees Pending (₹k)" v={Math.round(st.reduce((a,s)=>a+CF+EF-s.cf-s.ef,0)/1000)} s="College + exam"/></div>
+<div className="card"><h3>Attendance & Marks by Dept</h3><Bars data={depts}/><p style={{color:"var(--mu)",fontSize:12}}>Solid = attendance · Faded = marks</p></div>
+<div className="card"><h3>Attendance Distribution</h3><Donut a={st.length-low.length} b={low.length}/></div>
+<div className="card"><h3>🏆 Top Performers</h3>{top.map((s,i)=><div className="li" key={s.id} style={{animationDelay:i*80+"ms"}} onClick={()=>open(s.id)}><div><b>{s.name}</b><br/><small>{s.id} · {s.dept}-{s.section}</small></div><span className="pill ok">{avgM(s)}%</span></div>)}</div>
+<div className="card"><h3>⚠️ Students below 75% <span className="pill bad">{low.length}</span></h3>{low.map((s,i)=><div className="li" key={s.id} style={{animationDelay:i*40+"ms"}} onClick={()=>open(s.id)}><div><b>{s.name}</b><br/><small>{s.id} · {s.dept}-{s.section}</small></div><span className="pill bad">{s.att}%</span></div>)}</div></div>}
+
+function Students({st,open,exportCsv}){
+const[q,setQ]=useState(""),[d,setD]=useState("All"),[k,setK]=useState("name"),[asc,setAsc]=useState(true);
+const rows=useMemo(()=>st.filter(s=>(d==="All"||s.dept===d)&&(s.name+s.id).toLowerCase().includes(q.toLowerCase())).sort((a,b)=>{const x=k==="avg"?avgM(a):a[k],y=k==="avg"?avgM(b):b[k];return(x>y?1:x<y?-1:0)*(asc?1:-1)}),[st,q,d,k,asc]);
+const H=({c,t})=><th onClick={()=>{c===k?setAsc(!asc):(setK(c),setAsc(true))}}>{t} {k===c?(asc?"↑":"↓"):"↕"}</th>;
+return <div className="view"><h2>Students</h2><p className="sub">Search, filter, sort and export.</p>
+<div className="row"><input placeholder="🔍 Search name or roll no" value={q} onChange={e=>setQ(e.target.value)}/><select value={d} onChange={e=>setD(e.target.value)}><option>All</option><option>CSE</option><option>AIDS</option></select></div>
+<div className="row"><button className="btn" onClick={exportCsv}>⬇ Export CSV</button></div>
+<div className="tw"><table><thead><tr><H c="id" t="ROLL NO"/><H c="name" t="NAME"/><H c="dept" t="DEPT"/><H c="section" t="SEC"/><H c="att" t="ATTENDANCE"/><H c="avg" t="MARKS"/></tr></thead>
+<tbody>{rows.map((s,i)=><tr className="r" key={s.id} style={{animationDelay:Math.min(i,15)*25+"ms"}} onClick={()=>open(s.id)}><td>{s.id}</td><td><b>{s.name}</b></td><td>{s.dept}</td><td>{s.section}</td><td><span className={"pill "+(s.att<75?"bad":"ok")}>{s.att}%</span></td><td>{avgM(s)}%</td></tr>)}</tbody></table></div>
+{!rows.length&&<p className="sub" style={{textAlign:"center",marginTop:20}}>No students match.</p>}</div>}
+
+function Profile({s,st,pick,setAtt,edit,rename}){
+if(!s)return null;
+const[nm,setNm]=useState(s.name);useEffect(()=>setNm(s.name),[s.id,s.name]);
+return <div className="view"><h2>Student Profile</h2><p className="sub">Individual attendance and marks.</p>
+<select style={{marginBottom:16}} value={s.id} onChange={e=>pick(e.target.value)}>{st.map(x=><option key={x.id} value={x.id}>{x.name} ({x.id})</option>)}</select>
+<div className="card prof" key={s.id}><div className="av">{s.name[0]}</div><h3 style={{margin:"0 0 4px"}}>{s.name}</h3><small style={{color:"var(--mu)"}}>{s.id} · {s.dept} · 3rd · Section {s.section}</small>
+<div style={{margin:"18px 0"}}><span className={"pill "+(s.att<75?"bad":"ok")} style={{fontSize:30,padding:"10px 28px"}}>{s.att}%</span><p style={{color:"var(--mu)",margin:"8px 0 0"}}>{s.att<75?"⚠️ Below the 75% requirement":"✅ Attendance on track"}</p></div>
+<label style={{textAlign:"left"}}>Student name</label><div className="row" style={{marginBottom:0}}><input value={nm} onChange={e=>setNm(e.target.value)}/><button className="btn" onClick={()=>rename(s.id,nm)}>Change name</button></div>
+<label style={{textAlign:"left"}}>Update attendance: {s.att}%</label><input type="range" min="0" max="100" value={s.att} onChange={e=>setAtt(s.id,+e.target.value)}/>
+<button className="btn p" style={{width:"100%",marginTop:16}} onClick={edit}>Edit marks</button></div>
+<div className="card"><h3>Subject-wise Marks</h3>{SUBJ.map(([key,l])=><div className="sub-r" key={key}><div><span>{l}</span><span>{s[key]}</span></div><Grow v={s[key]}/></div>)}<p><b>Overall:</b> {avgM(s)}%</p></div></div>}
+
+function Marks({s,save}){
+const[f,setF]=useState({});useEffect(()=>setF({math:s.math,prog:s.prog,dbms:s.dbms}),[s.id]);
+return <div className="view"><h2>Marks Form</h2><p className="sub">Changes update the dashboard immediately.</p>
+<div className="card"><h3>Edit marks — {s.name}</h3><small style={{color:"var(--mu)"}}>{s.id}</small>
+{SUBJ.map(([k,l])=><div key={k}><label>{l}</label><input type="number" min="0" max="100" value={f[k]??""} onChange={e=>setF({...f,[k]:Math.max(0,Math.min(100,+e.target.value))})}/></div>)}
+<div className="row" style={{marginTop:18}}><button className="btn p" onClick={()=>save(s.id,f)}>Save changes</button><button className="btn" onClick={()=>setF({math:s.math,prog:s.prog,dbms:s.dbms})}>Reset</button></div></div></div>}
+
+const SB=["Math","Programming","DBMS","Data Structures","Lab","Mentoring"],FAC={Math:"Dr. Rao",Programming:"Prof. Meera",DBMS:"Dr. Iyer","Data Structures":"Prof. Kumar",Lab:"Ms. Divya",Mentoring:"Dr. Nair"};
+const DAYS=["Mon","Tue","Wed","Thu","Fri","Sat"],SLOTS=[[9,"9:00"],[10,"10:00"],[11,"11:15"],[13,"1:30"],[14,"2:30"]];
+function Timetable(){
+const g=new Date(),td=Math.max(0,Math.min(5,g.getDay()-1)),[d,setD]=useState(td);
+return <div className="view"><h2>Class Timetable</h2><p className="sub">Weekly schedule · CSE/AIDS 3rd year</p>
+<div className="chips">{DAYS.map((x,i)=><button key={x} className={"chip"+(d===i?" on":"")} onClick={()=>setD(i)}>{x}{i===td?" •":""}</button>)}</div>
+<div key={d}>{SLOTS.map(([h,t],s)=>{const sb=SB[(d*2+s)%6];return <React.Fragment key={s}>{s===3&&<div className="brk">🍽 Lunch break · 12:30</div>}<div className={"per"+(d===td&&g.getHours()===h?" now":"")} style={{animationDelay:s*70+"ms"}}><div className="tm">{t}</div><div style={{flex:1}}><b>{sb}</b><br/><small>{FAC[sb]} · Room {101+(d+s)%5}</small></div>{d===td&&g.getHours()===h&&<span className="pill ok">Now</span>}</div></React.Fragment>})}</div></div>}
+
+function Fees({s,st,pick,pay,rec}){
+const[m,setM]=useState(null),[amt,setAmt]=useState(0),[meth,setMeth]=useState("UPI"),[busy,setBusy]=useState(false);
+const items=[["cf","College Fee",CF],["ef","Exam Fee",EF]];
+const due=k=>(k==="cf"?CF:EF)-s[k];
+const go=()=>{if(amt<1||amt>due(m))return;setBusy(true);setTimeout(()=>{pay(s.id,m,amt,meth);setBusy(false);setM(null)},1300)};
+const mine=rec.filter(r=>r.sid===s.id);
+return <div className="view"><h2>Fee Payment</h2><p className="sub">Pay college and exam fees (demo payments).</p>
+<select style={{marginBottom:16}} value={s.id} onChange={e=>pick(e.target.value)}>{st.map(x=><option key={x.id} value={x.id}>{x.name} ({x.id})</option>)}</select>
+{items.map(([k,l,tot])=>{const dd=due(k);return <div className="card" key={k+s.id}><div style={{display:"flex",justifyContent:"space-between"}}><h3 style={{margin:0}}>{l}</h3><span className={"pill "+(dd?"bad":"ok")}>{dd?"Due "+fmt(dd):"Paid ✓"}</span></div>
+<p style={{color:"var(--mu)"}}>Paid {fmt(s[k])} of {fmt(tot)}</p><Grow v={Math.round(s[k]/tot*100)}/>
+<button className="btn p" style={{marginTop:14,width:"100%",opacity:dd?1:.5}} disabled={!dd} onClick={()=>{setM(k);setAmt(dd)}}>Pay {l}</button></div>})}
+<div className="card"><h3>🧾 Receipts</h3>{!mine.length&&<small style={{color:"var(--mu)"}}>No payments yet.</small>}{mine.map(r=><div className="li" key={r.no}><div><b>{r.type==="cf"?"College Fee":"Exam Fee"}</b><br/><small>{r.no} · {r.meth} · {r.date}</small></div><span className="pill ok">{fmt(r.amt)}</span></div>)}</div>
+{m&&<div className="modal" onClick={()=>!busy&&setM(null)}><div className="card" onClick={e=>e.stopPropagation()}><h3>Pay {m==="cf"?"College":"Exam"} Fee</h3><small style={{color:"var(--mu)"}}>{s.name} · {s.id} · Due {fmt(due(m))}</small>
+<label>Amount (₹)</label><input type="number" value={amt} min="1" max={due(m)} onChange={e=>setAmt(+e.target.value)}/>
+<label>Method</label><div className="mth">{["UPI","Card","NetBanking"].map(x=><button key={x} className={"chip"+(meth===x?" on":"")} onClick={()=>setMeth(x)}>{x}</button>)}</div>
+<button className="btn p" style={{width:"100%",marginTop:12}} onClick={go} disabled={busy}>{busy?<span className="spin"/>:"Pay "+fmt(amt||0)}</button></div></div>}</div>}
+
+function App(){
+const ls=(k,d)=>{try{return localStorage.getItem(k)||d}catch(e){return d}};
+const[st,setSt]=useState(SEED),[view,setView]=useState("dash"),[sel,setSel]=useState("A101"),[menu,setMenu]=useState(false),[toast,setToast]=useState("");
+const[acc,setAcc]=useState(ls("acc","violet")),[mode,setMode]=useState(ls("mode","light"));
+const[rec,setRec]=useState([]);const fileRef=useRef();
+useEffect(()=>{document.documentElement.dataset.accent=acc;document.documentElement.dataset.theme=mode;try{localStorage.setItem("acc",acc);localStorage.setItem("mode",mode)}catch(e){}},[acc,mode]);
+const say=m=>{setToast(m);setTimeout(()=>setToast(""),2200)};
+const go=v=>{setView(v);setMenu(false);window.scrollTo({top:0,behavior:"smooth"})};
+const open=id=>{setSel(id);go("prof")};
+const cur=st.find(s=>s.id===sel)||st[0];
+const setAtt=(id,v)=>setSt(st.map(s=>s.id===id?{...s,att:v}:s));
+const save=(id,f)=>{setSt(st.map(s=>s.id===id?{...s,...f}:s));say("Marks saved ✓");go("dash")};
+const rename=(id,n)=>{n=n.trim();if(!n)return say("Name can't be empty");setSt(st.map(s=>s.id===id?{...s,name:n}:s));say("Name updated ✓")};
+const pay=(id,k,a,meth)=>{const s=st.find(x=>x.id===id);setSt(st.map(x=>x.id===id?{...x,[k]:x[k]+a}:x));setRec([{no:"RCP"+(1001+rec.length),sid:id,type:k,amt:a,meth,date:new Date().toLocaleDateString("en-IN")},...rec]);say("Payment of "+fmt(a)+" successful ✓")};
+const exportCsv=()=>{const h="roll,name,dept,section,attendance,math,programming,dbms\n"+st.map(s=>[s.id,s.name,s.dept,s.section,s.att,s.math,s.prog,s.dbms].join(",")).join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([h],{type:"text/csv"}));a.download="students.csv";a.click();say("CSV exported")};
+const upload=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const L=r.result.trim().split(/\r?\n/).slice(1).map(l=>l.split(",").map(x=>x.trim())).filter(c=>c.length>=8).map(c=>({id:c[0],name:c[1],dept:c[2],section:c[3],att:+c[4]||0,math:+c[5]||0,prog:+c[6]||0,dbms:+c[7]||0,cf:+c[8]||0,ef:+c[9]||0}));if(L.length){setSt(L);setSel(L[0].id);say(L.length+" students loaded")}else say("Invalid CSV format")};r.readAsText(f);e.target.value=""};
+const nav=[["dash","▦","Dashboard"],["stu","👥","Students"],["prof","🎓","Student Profile"],["marks","✏️","Marks Form"],["tt","🗓","Timetable"],["fees","💳","Fees"]];
+const cols={violet:"#7c3aed",emerald:"#059669",sunset:"#f97316",ocean:"#2563eb"};
+return <>
+<header className="top"><button className="ib" onClick={()=>setMenu(!menu)}>☰</button><div className="logo">C</div><div className="grow"><h1>CampusHub</h1><small>Attendance & Results</small></div><button className="ib" onClick={()=>setMode(mode==="light"?"dark":"light")}>{mode==="light"?"🌙":"☀️"}</button></header>
+<div className={"scrim"+(menu?" open":"")} onClick={()=>setMenu(false)}/>
+<aside className={"side"+(menu?" open":"")}>{nav.map(([k,i,l])=><button key={k} className={"nav"+(view===k?" on":"")} onClick={()=>go(k)}><span>{i}</span>{l}</button>)}
+<div className="card" style={{marginTop:20}}><b>Accent colour</b><div className="sw">{Object.keys(cols).map(c=><button key={c} title={c} className={acc===c?"on":""} style={{background:cols[c]}} onClick={()=>setAcc(c)}/>)}</div></div>
+<div className="card"><b>CampusHub</b><br/><small style={{color:"var(--mu)"}}>College department HOD dashboard</small></div></aside>
+<main>
+<div className="row"><button className="btn" onClick={()=>fileRef.current.click()}>⬆ Upload CSV</button><input ref={fileRef} type="file" accept=".csv" hidden onChange={upload}/></div>
+{view==="dash"&&<Dashboard st={st} open={open}/>}
+{view==="stu"&&<Students st={st} open={open} exportCsv={exportCsv}/>}
+{view==="prof"&&<Profile s={cur} st={st} pick={setSel} setAtt={setAtt} edit={()=>go("marks")} rename={rename}/>}
+{view==="tt"&&<Timetable/>}
+{view==="fees"&&<Fees s={cur} st={st} pick={setSel} pay={pay} rec={rec}/>}
+{view==="marks"&&<Marks s={cur} save={save}/>}
+</main>
+<div className={"toast"+(toast?" show":"")}>{toast}</div></>}
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
